@@ -604,30 +604,446 @@
         .hidden {
             display: none !important;
         }
+        /* Liked Music Tab Styles */
+.liked-container {
+    flex: 1;
+    padding: 24px;
+    overflow-y: auto;
+}
+
+.liked-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.liked-title {
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.liked-stats {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.stat-card {
+    background: var(--md-sys-color-surface-container);
+    padding: 16px;
+    border-radius: 16px;
+    text-align: center;
+    flex: 1;
+}
+
+.stat-number {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--md-sys-color-primary);
+    margin-bottom: 4px;
+}
+
+.stat-label {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.empty-liked {
+    text-align: center;
+    padding: 60px 20px;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.empty-liked-icon {
+    font-size: 64px;
+    margin-bottom: 16px;
+    opacity: 0.5;
+}
+
+.empty-liked-text {
+    font-size: 18px;
+    margin-bottom: 8px;
+}
+
+.empty-liked-subtext {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.liked-actions {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.action-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    background: var(--md-sys-color-surface-container);
+    color: white;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s;
+    font-size: 14px;
+}
+
+.action-btn:hover {
+    background: var(--md-sys-color-surface-container-high);
+}
+
+.action-btn.primary {
+    background: var(--md-sys-color-primary);
+}
+
+.action-btn.primary:hover {
+    background: var(--md-sys-color-primary);
+    filter: brightness(1.1);
+}
+
+/* Enhanced favorite button states */
+.favorite-btn.animate {
+    animation: heartBeat 0.6s ease;
+}
+
+@keyframes heartBeat {
+    0% { transform: scale(1); }
+    25% { transform: scale(1.3); }
+    50% { transform: scale(0.9); }
+    75% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+
+/* Playlist styles for liked songs */
+.playlist-info {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+    padding: 20px;
+    background: var(--md-sys-color-surface-container);
+    border-radius: 20px;
+}
+
+.playlist-cover {
+    width: 120px;
+    height: 120px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #6750A4, #EADDFF);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 48px;
+    color: white;
+}
+
+.playlist-details {
+    flex: 1;
+}
+
+.playlist-name {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.playlist-description {
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 12px;
+}
+
+.playlist-meta {
+    display: flex;
+    gap: 16px;
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+/* Smart playlist suggestions */
+.smart-suggestions {
+    background: var(--md-sys-color-surface-container);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 24px;
+}
+
+.suggestion-header {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.suggestion-items {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+}
+
+.suggestion-item {
+    padding: 12px;
+    background: var(--md-sys-color-surface-container-high);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.suggestion-item:hover {
+    background: rgba(103, 80, 164, 0.2);
+    transform: translateY(-2px);
+}
+
+.suggestion-title {
+    font-weight: 500;
+    margin-bottom: 4px;
+}
+
+.suggestion-artist {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.7);
+}/* Liked Music Tab Styles */
+.liked-container {
+    flex: 1;
+    padding: 24px;
+    overflow-y: auto;
+}
+
+.liked-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.liked-title {
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.liked-stats {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.stat-card {
+    background: var(--md-sys-color-surface-container);
+    padding: 16px;
+    border-radius: 16px;
+    text-align: center;
+    flex: 1;
+}
+
+.stat-number {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--md-sys-color-primary);
+    margin-bottom: 4px;
+}
+
+.stat-label {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.empty-liked {
+    text-align: center;
+    padding: 60px 20px;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.empty-liked-icon {
+    font-size: 64px;
+    margin-bottom: 16px;
+    opacity: 0.5;
+}
+
+.empty-liked-text {
+    font-size: 18px;
+    margin-bottom: 8px;
+}
+
+.empty-liked-subtext {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.liked-actions {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.action-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    background: var(--md-sys-color-surface-container);
+    color: white;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s;
+    font-size: 14px;
+}
+
+.action-btn:hover {
+    background: var(--md-sys-color-surface-container-high);
+}
+
+.action-btn.primary {
+    background: var(--md-sys-color-primary);
+}
+
+.action-btn.primary:hover {
+    background: var(--md-sys-color-primary);
+    filter: brightness(1.1);
+}
+
+/* Enhanced favorite button states */
+.favorite-btn.animate {
+    animation: heartBeat 0.6s ease;
+}
+
+@keyframes heartBeat {
+    0% { transform: scale(1); }
+    25% { transform: scale(1.3); }
+    50% { transform: scale(0.9); }
+    75% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+
+/* Playlist styles for liked songs */
+.playlist-info {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+    padding: 20px;
+    background: var(--md-sys-color-surface-container);
+    border-radius: 20px;
+}
+
+.playlist-cover {
+    width: 120px;
+    height: 120px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #6750A4, #EADDFF);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 48px;
+    color: white;
+}
+
+.playlist-details {
+    flex: 1;
+}
+
+.playlist-name {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.playlist-description {
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 12px;
+}
+
+.playlist-meta {
+    display: flex;
+    gap: 16px;
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+/* Smart playlist suggestions */
+.smart-suggestions {
+    background: var(--md-sys-color-surface-container);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 24px;
+}
+
+.suggestion-header {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.suggestion-items {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+}
+
+.suggestion-item {
+    padding: 12px;
+    background: var(--md-sys-color-surface-container-high);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.suggestion-item:hover {
+    background: rgba(103, 80, 164, 0.2);
+    transform: translateY(-2px);
+}
+
+.suggestion-title {
+    font-weight: 500;
+    margin-bottom: 4px;
+}
+
+.suggestion-artist {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.7);
+}
     </style>
 </head>
 <body>
     <div class="app" id="app">
-        <!-- Sidebar -->
-        <div class="sidebar">
-            <div class="sidebar-item active" data-page="home">
-                <div class="sidebar-icon">
-                    <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
-                        <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
-                    </svg>
-                </div>
-                <span class="sidebar-text">Home</span>
-            </div>
-            <div class="sidebar-item" data-page="library">
-                <div class="sidebar-icon">
-                    <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
-                        <path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-8 12.5v-9l6 4.5-6 4.5z"/>
-                    </svg>
-                </div>
-                <span class="sidebar-text">Library</span>
-            </div>
-        </div>
+ <div class="sidebar">
+    <div class="logo">
+        <img src="spiderman.png" class="sidebar-logo">
+        <h1>MZ Player</h1>
+    </div>
 
+    <div class="sidebar-item" data-page="home">
+        <div class="sidebar-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24"><path fill="#fff" d="M12 3l9 8h-3v10H6V11H3z"/></svg>
+        </div>
+        <span class="sidebar-text">Home</span>
+    </div>
+
+    <div class="sidebar-item" data-page="library">
+        <div class="sidebar-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24"><path fill="#fff" d="M4 6h16v2H4zm0 5h16v2H4zm0 5h10v2H4z"/></svg>
+        </div>
+        <span class="sidebar-text">Library</span>
+    </div>
+
+    <div class="sidebar-item" data-page="liked">
+        <div class="sidebar-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24"><path fill="#fff" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 6 4 4 6.5 4c1.74 0 3.41 1 4.13 2.44h1.75C14.09 5 15.76 4 17.5 4 20 4 22 6 22 8.5c0 3.78-3.4 6.86-8.55 11.54z"/></svg>
+        </div>
+        <span class="sidebar-text">Liked Songs</span>
+    </div>
+</div>
+
+    
         <!-- Main Content -->
         <div class="main-content">
             <!-- Player View -->
@@ -730,6 +1146,95 @@
             </div>
         </div>
     </div>
+
+    <!-- Liked Music View -->
+<div class="liked-container hidden" id="likedView">
+    <div class="liked-header">
+        <h1 class="liked-title">Liked Songs</h1>
+    </div>
+
+    <!-- Playlist Header -->
+    <div class="playlist-info" id="playlistInfo">
+        <div class="playlist-cover">
+            <svg viewBox="0 0 24 24" width="48" height="48" fill="currentColor">
+                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+            </svg>
+        </div>
+        <div class="playlist-details">
+            <div class="playlist-name">Liked Songs</div>
+            <div class="playlist-description" id="playlistDescription">Your collection of favorite tracks</div>
+            <div class="playlist-meta">
+                <span id="likedCount">0 songs</span>
+                <span id="totalDuration">• 0 min</span>
+                <span>• Updated just now</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="liked-actions">
+        <button class="action-btn primary ripple" id="playLikedBtn">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                <path d="M8 5v14l11-7z"/>
+            </svg>
+            Play All
+        </button>
+        <button class="action-btn ripple" id="shuffleLikedBtn">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                <path d="M10.59 9.17L5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm.33 9.41l-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z"/>
+            </svg>
+            Shuffle
+        </button>
+        <button class="action-btn ripple" id="clearLikedBtn">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+            </svg>
+            Clear All
+        </button>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="liked-stats" id="likedStats">
+        <div class="stat-card">
+            <div class="stat-number" id="totalLiked">0</div>
+            <div class="stat-label">Total Liked</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number" id="recentLiked">0</div>
+            <div class="stat-label">Added This Week</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number" id="topArtist">-</div>
+            <div class="stat-label">Top Artist</div>
+        </div>
+    </div>
+
+    <!-- Smart Suggestions -->
+    <div class="smart-suggestions" id="smartSuggestions">
+        <div class="suggestion-header">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+            </svg>
+            You might also like
+        </div>
+        <div class="suggestion-items" id="suggestionItems">
+            <!-- Suggestions will be populated dynamically -->
+        </div>
+    </div>
+
+    <!-- Liked Songs List -->
+    <div class="song-list" id="likedSongList">
+        <div class="empty-liked" id="emptyLiked">
+            <div class="empty-liked-icon">
+                <svg viewBox="0 0 24 24" width="64" height="64" fill="currentColor">
+                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                </svg>
+            </div>
+            <div class="empty-liked-text">No liked songs yet</div>
+            <div class="empty-liked-subtext">Songs you like will appear here</div>
+        </div>
+    </div>
+</div>
 
     <audio id="audioElement"></audio>
 
@@ -1452,6 +1957,311 @@
                 }
             });
         });
+
+        // Add to the views object in the navigation section:
+const views = {
+    home: document.getElementById('playerView'),
+    library: document.getElementById('libraryView'),
+    liked: document.getElementById('likedView')
+};
+
+// Add these methods to the MusicPlayer class:
+
+/**
+ * Render liked songs in the liked music tab
+ */
+renderLikedSongs() {
+    const likedSongList = document.getElementById('likedSongList');
+    const emptyLiked = document.getElementById('emptyLiked');
+    const likedStats = document.getElementById('likedStats');
+    const smartSuggestions = document.getElementById('smartSuggestions');
+    const playlistInfo = document.getElementById('playlistInfo');
+    const likedActions = document.querySelector('.liked-actions');
+
+    // Get liked songs
+    const likedSongs = this.songs.filter(song => this.favorites.has(song.id));
+    
+    // Update stats
+    this.updateLikedStats(likedSongs);
+    
+    // Show/hide empty state
+    if (likedSongs.length === 0) {
+        emptyLiked.classList.remove('hidden');
+        likedSongList.innerHTML = '';
+        likedStats.classList.add('hidden');
+        smartSuggestions.classList.add('hidden');
+        playlistInfo.classList.add('hidden');
+        likedActions.classList.add('hidden');
+        return;
+    }
+    
+    emptyLiked.classList.add('hidden');
+    likedStats.classList.remove('hidden');
+    smartSuggestions.classList.remove('hidden');
+    playlistInfo.classList.remove('hidden');
+    likedActions.classList.remove('hidden');
+    
+    // Render liked songs
+    likedSongList.innerHTML = '';
+    likedSongs.forEach((song, index) => {
+        const originalIndex = this.songs.findIndex(s => s.id === song.id);
+        const songItem = document.createElement('div');
+        songItem.className = 'song-item';
+        songItem.innerHTML = `
+            <img src="${song.thumbnail}" alt="${song.title}" class="song-thumbnail">
+            <div class="song-details">
+                <div class="song-list-title">${song.title}</div>
+                <div class="song-list-artist">${song.artist}</div>
+            </div>
+            <div class="song-duration">${song.duration}</div>
+            <button class="favorite-btn active animate" data-id="${song.id}">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                </svg>
+            </button>
+        `;
+        songItem.addEventListener('click', (e) => {
+            if (!e.target.closest('.favorite-btn')) {
+                this.playSong(originalIndex);
+            }
+        });
+        
+        const favoriteBtn = songItem.querySelector('.favorite-btn');
+        favoriteBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            this.toggleSongFavorite(song.id);
+            this.renderLikedSongs(); // Refresh the liked songs view
+        });
+        
+        likedSongList.appendChild(songItem);
+    });
+    
+    // Generate smart suggestions
+    this.generateSmartSuggestions(likedSongs);
+}
+
+/**
+ * Update liked songs statistics
+ */
+updateLikedStats(likedSongs) {
+    const totalLiked = document.getElementById('totalLiked');
+    const recentLiked = document.getElementById('recentLiked');
+    const topArtist = document.getElementById('topArtist');
+    const likedCount = document.getElementById('likedCount');
+    const totalDuration = document.getElementById('totalDuration');
+    const playlistDescription = document.getElementById('playlistDescription');
+    
+    // Basic counts
+    totalLiked.textContent = likedSongs.length;
+    likedCount.textContent = `${likedSongs.length} ${likedSongs.length === 1 ? 'song' : 'songs'}`;
+    
+    // Calculate recent likes (last 7 days)
+    const oneWeekAgo = new Date();
+    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+    const recentCount = likedSongs.filter(song => {
+        return song.lastPlayed && new Date(song.lastPlayed) > oneWeekAgo;
+    }).length;
+    recentLiked.textContent = recentCount;
+    
+    // Find top artist
+    const artistCounts = {};
+    likedSongs.forEach(song => {
+        artistCounts[song.artist] = (artistCounts[song.artist] || 0) + 1;
+    });
+    
+    let topArtistName = '-';
+    let maxCount = 0;
+    Object.entries(artistCounts).forEach(([artist, count]) => {
+        if (count > maxCount) {
+            maxCount = count;
+            topArtistName = artist;
+        }
+    });
+    topArtist.textContent = topArtistName;
+    
+    // Update playlist description
+    if (likedSongs.length > 0) {
+        const artists = Object.keys(artistCounts);
+        if (artists.length === 1) {
+            playlistDescription.textContent = `All songs by ${artists[0]}`;
+        } else if (artists.length <= 3) {
+            playlistDescription.textContent = `Featuring ${artists.join(', ')}`;
+        } else {
+            playlistDescription.textContent = `${likedSongs.length} songs from ${artists.length} artists`;
+        }
+    }
+    
+    // Estimate total duration (assuming average 3:30 per song)
+    const totalMinutes = Math.round(likedSongs.length * 3.5);
+    totalDuration.textContent = `• ${totalMinutes} min`;
+}
+
+/**
+ * Generate smart suggestions based on liked songs
+ */
+generateSmartSuggestions(likedSongs) {
+    const suggestionItems = document.getElementById('suggestionItems');
+    
+    if (likedSongs.length === 0) {
+        suggestionItems.innerHTML = '<div class="suggestion-item">Like some songs to get recommendations</div>';
+        return;
+    }
+    
+    // Get unique artists from liked songs
+    const likedArtists = [...new Set(likedSongs.map(song => song.artist))];
+    
+    // Find similar songs (not already liked)
+    const suggestions = this.songs.filter(song => 
+        !this.favorites.has(song.id) && 
+        likedArtists.includes(song.artist)
+    ).slice(0, 6);
+    
+    // If not enough suggestions, add random songs
+    if (suggestions.length < 6) {
+        const randomSongs = this.songs.filter(song => 
+            !this.favorites.has(song.id) && 
+            !suggestions.includes(song)
+        ).slice(0, 6 - suggestions.length);
+        suggestions.push(...randomSongs);
+    }
+    
+    suggestionItems.innerHTML = '';
+    suggestions.forEach(song => {
+        const suggestionItem = document.createElement('div');
+        suggestionItem.className = 'suggestion-item ripple';
+        suggestionItem.innerHTML = `
+            <div class="suggestion-title">${song.title}</div>
+            <div class="suggestion-artist">${song.artist}</div>
+        `;
+        suggestionItem.addEventListener('click', () => {
+            const songIndex = this.songs.findIndex(s => s.id === song.id);
+            if (songIndex !== -1) {
+                this.playSong(songIndex);
+            }
+        });
+        suggestionItems.appendChild(suggestionItem);
+    });
+}
+
+/**
+ * Play all liked songs
+ */
+playAllLiked() {
+    const likedSongs = this.songs.filter(song => this.favorites.has(song.id));
+    if (likedSongs.length === 0) return;
+    
+    // Set queue to liked songs
+    this.queue = [...likedSongs];
+    this.currentSongIndex = 0;
+    this.renderQueue();
+    
+    // Play first song
+    const firstSongIndex = this.songs.findIndex(s => s.id === likedSongs[0].id);
+    if (firstSongIndex !== -1) {
+        this.playSong(firstSongIndex);
+    }
+}
+
+/**
+ * Shuffle and play liked songs
+ */
+shuffleLiked() {
+    const likedSongs = this.songs.filter(song => this.favorites.has(song.id));
+    if (likedSongs.length === 0) return;
+    
+    // Shuffle liked songs
+    for (let i = likedSongs.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [likedSongs[i], likedSongs[j]] = [likedSongs[j], likedSongs[i]];
+    }
+    
+    // Set queue to shuffled liked songs
+    this.queue = [...likedSongs];
+    this.currentSongIndex = 0;
+    this.renderQueue();
+    
+    // Play first song
+    const firstSongIndex = this.songs.findIndex(s => s.id === likedSongs[0].id);
+    if (firstSongIndex !== -1) {
+        this.playSong(firstSongIndex);
+    }
+}
+
+/**
+ * Clear all liked songs
+ */
+clearAllLiked() {
+    if (this.favorites.size === 0) return;
+    
+    if (confirm('Are you sure you want to remove all liked songs?')) {
+        this.favorites.clear();
+        setItem('favorites', Array.from(this.favorites));
+        this.renderLikedSongs();
+        this.renderSongList();
+        
+        // Update favorite button if current song was liked
+        const currentSong = this.songs[this.currentSongIndex];
+        if (currentSong) {
+            this.favoriteBtn.classList.toggle('active', false);
+        }
+        
+        this.showError('All liked songs have been removed');
+    }
+}
+
+// Add these event listeners in the init() method:
+
+// Liked music tab buttons
+document.getElementById('playLikedBtn').addEventListener('click', () => this.playAllLiked());
+document.getElementById('shuffleLikedBtn').addEventListener('click', () => this.shuffleLiked());
+document.getElementById('clearLikedBtn').addEventListener('click', () => this.clearAllLiked());
+
+// Update the toggleSongFavorite method to refresh liked songs view:
+toggleSongFavorite(songId) {
+    if (this.favorites.has(songId)) {
+        this.favorites.delete(songId);
+    } else {
+        this.favorites.add(songId);
+        // Add animation effect
+        const favoriteBtn = document.querySelector(`.favorite-btn[data-id="${songId}"]`);
+        if (favoriteBtn) {
+            favoriteBtn.classList.add('animate');
+            setTimeout(() => favoriteBtn.classList.remove('animate'), 600);
+        }
+    }
+    
+    // Save favorites to localStorage
+    setItem('favorites', Array.from(this.favorites));
+    
+    // Update favorite button if this is the current song
+    const currentSong = this.songs[this.currentSongIndex];
+    if (currentSong && currentSong.id === songId) {
+        this.favoriteBtn.classList.toggle('active', this.favorites.has(songId));
+    }
+    
+    // Refresh liked songs view if we're on that tab
+    if (document.getElementById('likedView').classList.contains('hidden') === false) {
+        this.renderLikedSongs();
+    }
+}
+
+// Update the navigation to handle the liked tab:
+sidebarItems.forEach(item => {
+    item.addEventListener('click', function() {
+        sidebarItems.forEach(i => i.classList.remove('active'));
+        this.classList.add('active');
+        
+        Object.values(views).forEach(view => view.classList.add('hidden'));
+        
+        const page = this.getAttribute('data-page');
+        views[page].classList.remove('hidden');
+        
+        // Special handling for liked tab
+        if (page === 'liked') {
+            window.musicPlayer.renderLikedSongs();
+        }
+    });
+});
     </script>
 </body>
 </html>
