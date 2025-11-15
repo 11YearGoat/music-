@@ -23,6 +23,8 @@
             --md-sys-color-on-surface: #E6E0E9;
             --md-sys-color-surface-container: #2D2930;
             --md-sys-color-surface-container-high: #38343B;
+            --md-sys-color-error: #F2B8B5;
+            --md-sys-color-on-error: #601410;
         }
 
         body {
@@ -40,6 +42,7 @@
             overflow: hidden;
         }
 
+        /* Sidebar */
         .sidebar {
             width: 240px;
             background: var(--md-sys-color-surface-container);
@@ -81,6 +84,7 @@
             justify-content: center;
         }
 
+        /* Main Content */
         .main-content {
             flex: 1;
             display: flex;
@@ -158,10 +162,6 @@
             background: rgba(103, 80, 164, 0.2);
         }
 
-        .queue-item.dragging {
-            opacity: 0.5;
-        }
-
         .queue-thumbnail {
             width: 40px;
             height: 40px;
@@ -191,6 +191,7 @@
             text-overflow: ellipsis;
         }
 
+        /* Album Art */
         .album-art-container {
             position: relative;
             width: 320px;
@@ -231,6 +232,7 @@
             to { transform: rotate(360deg); }
         }
 
+        /* Song Info */
         .song-info {
             text-align: center;
             margin-bottom: 24px;
@@ -252,6 +254,7 @@
             color: rgba(255, 255, 255, 0.7);
         }
 
+        /* Controls */
         .controls {
             display: flex;
             flex-direction: column;
@@ -360,6 +363,7 @@
             cursor: pointer;
         }
 
+        /* Library */
         .library-header {
             display: flex;
             justify-content: space-between;
@@ -502,6 +506,22 @@
             background: rgba(255, 255, 255, 0.1);
         }
 
+        .loading-indicator {
+            text-align: center;
+            padding: 20px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .error-message {
+            text-align: center;
+            padding: 20px;
+            color: var(--md-sys-color-error);
+            background: rgba(242, 184, 181, 0.1);
+            border-radius: 16px;
+            margin: 10px 0;
+        }
+
+        /* Responsive */
         @media (max-width: 1024px) {
             .player-container {
                 flex-direction: column;
@@ -588,6 +608,7 @@
 </head>
 <body>
     <div class="app" id="app">
+        <!-- Sidebar -->
         <div class="sidebar">
             <div class="sidebar-item active" data-page="home">
                 <div class="sidebar-icon">
@@ -607,7 +628,9 @@
             </div>
         </div>
 
+        <!-- Main Content -->
         <div class="main-content">
+            <!-- Player View -->
             <div class="player-container" id="playerView">
                 <div class="player-left">
                     <div class="album-art-container">
@@ -653,7 +676,7 @@
                                     <path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/>
                                 </svg>
                             </button>
-                            <button class="control-btn ripple active" id="favoriteBtn">
+                            <button class="control-btn ripple" id="favoriteBtn">
                                 <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
                                     <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
                                 </svg>
@@ -675,11 +698,14 @@
                         <button class="clear-queue" id="clearQueue">Clear</button>
                     </div>
                     <div class="queue-list" id="queueList">
-                        <!-- Queue items will be dynamically added here -->
+                        <div class="queue-item" style="justify-content: center; color: rgba(255,255,255,0.5);">
+                            Queue is empty
+                        </div>
                     </div>
                 </div>
             </div>
             
+            <!-- Library View -->
             <div class="library-container hidden" id="libraryView">
                 <div class="library-header">
                     <h1 class="library-title">Your Library</h1>
@@ -697,7 +723,9 @@
                 </div>
                 
                 <div class="song-list" id="songList">
-                    <!-- Songs will be dynamically added here -->
+                    <div class="loading-indicator" id="loadingIndicator">
+                        Loading songs from your repository...
+                    </div>
                 </div>
             </div>
         </div>
@@ -706,7 +734,7 @@
     <audio id="audioElement"></audio>
 
     <script>
-        // Register service worker
+        // Service Worker Registration
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', function() {
                 const swBlob = new Blob([`
@@ -760,12 +788,13 @@
         function getItem(key) {
             try {
                 const item = localStorage.getItem(key);
-                return item ? JSON.parse(item) : undefined;
+                return item ? JSON.parse(item) : null;
             } catch (error) {
                 console.error('Error reading from localStorage', error);
             }
         }
 
+        // Main Music Player Class
         class MusicPlayer {
             constructor() {
                 this.audio = document.getElementById('audioElement');
@@ -788,6 +817,7 @@
                 this.fileInput = document.getElementById('fileInput');
                 this.searchInput = document.getElementById('searchInput');
                 this.clearQueueBtn = document.getElementById('clearQueue');
+                this.loadingIndicator = document.getElementById('loadingIndicator');
                 
                 this.songs = [];
                 this.filteredSongs = [];
@@ -817,6 +847,7 @@
                 this.audio.addEventListener('loadedmetadata', () => this.updateDuration());
                 this.audio.addEventListener('timeupdate', () => this.updateProgress());
                 this.audio.addEventListener('ended', () => this.songEnded());
+                this.audio.addEventListener('error', (e) => this.handleAudioError(e));
                 
                 // Set initial volume
                 this.setVolume();
@@ -837,7 +868,7 @@
                 
                 // Load uploaded files
                 const savedUploads = getItem('uploadedFiles');
-                if (savedUploads) {
+                if (savedUploads && savedUploads.length > 0) {
                     this.songs = [...this.songs, ...savedUploads];
                     this.queue = [...this.songs];
                     this.filteredSongs = [...this.songs];
@@ -848,10 +879,14 @@
             
             async loadSongsFromGitHub() {
                 try {
-                    // Using GitHub API to get repository contents
+                    // First try GitHub API for better file listing
                     const response = await fetch('https://api.github.com/repos/11YearGoat/music-/contents/');
-                    const data = await response.json();
                     
+                    if (!response.ok) {
+                        throw new Error(`GitHub API error: ${response.status}`);
+                    }
+                    
+                    const data = await response.json();
                     const audioFiles = [];
                     
                     data.forEach(item => {
@@ -876,13 +911,58 @@
                         this.filteredSongs = [...this.songs];
                         this.renderSongList();
                         this.renderQueue();
+                        this.loadingIndicator.classList.add('hidden');
                     } else {
-                        // Fallback: Use demo songs if no songs found
                         this.useDemoSongs();
                     }
                 } catch (error) {
-                    console.error('Error loading songs from GitHub:', error);
-                    // Fallback: Use demo songs
+                    console.error('Error loading songs from GitHub API:', error);
+                    // Fallback: Try direct GitHub Pages access
+                    this.tryDirectGitHubAccess();
+                }
+            }
+            
+            async tryDirectGitHubAccess() {
+                try {
+                    // Try to get the raw HTML of the GitHub Pages and parse it
+                    const response = await fetch('https://11yeargoat.github.io/music-/');
+                    const text = await response.text();
+                    
+                    // Parse HTML to find audio files
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(text, 'text/html');
+                    const links = doc.querySelectorAll('a');
+                    
+                    const audioFiles = [];
+                    links.forEach(link => {
+                        const href = link.getAttribute('href');
+                        if (href && this.isAudioFile(href)) {
+                            audioFiles.push({
+                                id: this.generateId(),
+                                title: this.formatTitle(href),
+                                artist: 'Unknown Artist',
+                                url: `https://11yeargoat.github.io/music-/${href}`,
+                                thumbnail: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTYiIGhlaWdodD0iNTYiIHZpZXdCb3g9IjAgMCA1NiA1NiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjU2IiBoZWlnaHQ9IjU2IiByeD0iMTIiIGZpbGw9IiMyRDI5MzAiLz4KPGNpcmNsZSBjeD0iMjgiIGN5PSIyOCIgcj0iMTQiIGZpbGw9IiMzODM0M0IiLz4KPGNpcmNsZSBjeD0iMjgiIGN5PSIyOCIgcj0iNyIgZmlsbD0iIzY3NTBBNCIvPgo8L3N2Zz4K',
+                                duration: '--:--',
+                                playCount: 0,
+                                lastPlayed: null,
+                                isUploaded: false
+                            });
+                        }
+                    });
+                    
+                    if (audioFiles.length > 0) {
+                        this.songs = [...this.songs, ...audioFiles];
+                        this.queue = [...this.songs];
+                        this.filteredSongs = [...this.songs];
+                        this.renderSongList();
+                        this.renderQueue();
+                        this.loadingIndicator.classList.add('hidden');
+                    } else {
+                        this.useDemoSongs();
+                    }
+                } catch (error) {
+                    console.error('Error with direct GitHub access:', error);
                     this.useDemoSongs();
                 }
             }
@@ -893,19 +973,41 @@
                         id: this.generateId(),
                         title: 'Demo Song 1',
                         artist: 'Demo Artist',
-                        url: 'https://raw.githubusercontent.com/11YearGoat/music-/main/demo1.mp3',
+                        url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
                         thumbnail: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTYiIGhlaWdodD0iNTYiIHZpZXdCb3g9IjAgMCA1NiA1NiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjU2IiBoZWlnaHQ9IjU2IiByeD0iMTIiIGZpbGw9IiMyRDI5MzAiLz4KPGNpcmNsZSBjeD0iMjgiIGN5PSIyOCIgcj0iMTQiIGZpbGw9IiMzODM0M0IiLz4KPGNpcmNsZSBjeD0iMjgiIGN5PSIyOCIgcj0iNyIgZmlsbD0iIzY3NTBBNCIvPgo8L3N2Zz4K',
                         duration: '3:45',
                         playCount: 0,
                         lastPlayed: null,
                         isUploaded: false
+                    },
+                    {
+                        id: this.generateId(),
+                        title: 'Demo Song 2',
+                        artist: 'Demo Artist',
+                        url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3',
+                        thumbnail: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTYiIGhlaWdodD0iNTYiIHZpZXdCb3g9IjAgMCA1NiA1NiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjU2IiBoZWlnaHQ9IjU2IiByeD0iMTIiIGZpbGw9IiMyRDI5MzAiLz4KPGNpcmNsZSBjeD0iMjgiIGN5PSIyOCIgcj0iMTQiIGZpbGw9IiMzODM0M0IiLz4KPGNpcmNsZSBjeD0iMjgiIGN5PSIyOCIgcj0iNyIgZmlsbD0iIzY3NTBBNCIvPgo8L3N2Zz4K',
+                        duration: '4:20',
+                        playCount: 0,
+                        lastPlayed: null,
+                        isUploaded: false
                     }
                 ];
+                
                 this.songs = [...this.songs, ...demo];
                 this.queue = [...this.songs];
                 this.filteredSongs = [...this.songs];
                 this.renderSongList();
                 this.renderQueue();
+                this.loadingIndicator.classList.add('hidden');
+                
+                // Show demo message
+                const demoMessage = document.createElement('div');
+                demoMessage.className = 'error-message';
+                demoMessage.innerHTML = `
+                    <p>Couldn't load songs from your repository. Using demo songs instead.</p>
+                    <p style="margin-top: 8px; font-size: 14px;">Make sure your GitHub repository contains audio files and GitHub Pages is enabled.</p>
+                `;
+                this.songList.appendChild(demoMessage);
             }
             
             isAudioFile(filename) {
@@ -939,6 +1041,14 @@
             
             renderSongList() {
                 this.songList.innerHTML = '';
+                
+                if (this.filteredSongs.length === 0) {
+                    const noResults = document.createElement('div');
+                    noResults.className = 'error-message';
+                    noResults.textContent = 'No songs found matching your search';
+                    this.songList.appendChild(noResults);
+                    return;
+                }
                 
                 this.filteredSongs.forEach((song, index) => {
                     const originalIndex = this.songs.findIndex(s => s.id === song.id);
@@ -994,7 +1104,6 @@
                     const queueIndex = this.currentSongIndex + index + 1;
                     const queueItem = document.createElement('div');
                     queueItem.className = 'queue-item';
-                    queueItem.draggable = true;
                     queueItem.innerHTML = `
                         <img src="${song.thumbnail}" alt="${song.title}" class="queue-thumbnail">
                         <div class="queue-details">
@@ -1009,47 +1118,8 @@
                         }
                     });
                     
-                    // Drag and drop for queue reordering
-                    queueItem.addEventListener('dragstart', (e) => {
-                        e.dataTransfer.setData('text/plain', queueIndex);
-                        queueItem.classList.add('dragging');
-                    });
-                    
-                    queueItem.addEventListener('dragend', () => {
-                        queueItem.classList.remove('dragging');
-                    });
-                    
-                    queueItem.addEventListener('dragover', (e) => {
-                        e.preventDefault();
-                    });
-                    
-                    queueItem.addEventListener('drop', (e) => {
-                        e.preventDefault();
-                        const fromIndex = parseInt(e.dataTransfer.getData('text/plain'));
-                        const toIndex = queueIndex;
-                        this.reorderQueue(fromIndex, toIndex);
-                    });
-                    
                     this.queueList.appendChild(queueItem);
                 });
-            }
-            
-            reorderQueue(fromIndex, toIndex) {
-                if (fromIndex === toIndex) return;
-                
-                const [movedItem] = this.queue.splice(fromIndex, 1);
-                this.queue.splice(toIndex, 0, movedItem);
-                
-                // Update current song index if needed
-                if (this.currentSongIndex === fromIndex) {
-                    this.currentSongIndex = toIndex;
-                } else if (this.currentSongIndex > fromIndex && this.currentSongIndex <= toIndex) {
-                    this.currentSongIndex--;
-                } else if (this.currentSongIndex < fromIndex && this.currentSongIndex >= toIndex) {
-                    this.currentSongIndex++;
-                }
-                
-                this.renderQueue();
             }
             
             clearQueue() {
@@ -1076,6 +1146,15 @@
                 song.playCount = (song.playCount || 0) + 1;
                 song.lastPlayed = new Date().toISOString();
                 
+                // Update active song in list
+                document.querySelectorAll('.song-item').forEach((item, i) => {
+                    if (i === index) {
+                        item.classList.add('active');
+                    } else {
+                        item.classList.remove('active');
+                    }
+                });
+                
                 this.renderQueue();
                 this.play();
             }
@@ -1087,7 +1166,7 @@
                     this.albumArt.classList.add('playing');
                 }).catch(error => {
                     console.error('Error playing audio:', error);
-                    alert('Error playing audio. Please try another song or check your connection.');
+                    this.showError('Error playing audio. Please try another song or check your connection.');
                 });
             }
             
@@ -1222,6 +1301,33 @@
                 this.nextSong();
             }
             
+            handleAudioError(e) {
+                console.error('Audio error:', e);
+                this.showError('Error playing audio file. The file may be corrupted or unsupported.');
+            }
+            
+            showError(message) {
+                // Create a temporary error message
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'error-message';
+                errorDiv.textContent = message;
+                errorDiv.style.position = 'fixed';
+                errorDiv.style.top = '20px';
+                errorDiv.style.left = '50%';
+                errorDiv.style.transform = 'translateX(-50%)';
+                errorDiv.style.zIndex = '1000';
+                errorDiv.style.maxWidth = '80%';
+                
+                document.body.appendChild(errorDiv);
+                
+                // Remove after 5 seconds
+                setTimeout(() => {
+                    if (errorDiv.parentNode) {
+                        errorDiv.parentNode.removeChild(errorDiv);
+                    }
+                }, 5000);
+            }
+            
             formatTime(seconds) {
                 if (isNaN(seconds)) return '0:00';
                 
@@ -1264,15 +1370,7 @@
                 
                 // Save uploaded files to localStorage
                 const savedUploads = getItem('uploadedFiles') || [];
-                const updatedUploads = [...savedUploads, ...newUploads.map(song => ({
-                    ...song,
-                    // Don't save the object URL as it's temporary
-                    // Instead, we'll rely on re-uploading or store metadata only
-                    url: null, // Object URLs are session-specific
-                    fileName: song.fileName,
-                    fileSize: song.fileSize,
-                    uploadDate: song.uploadDate
-                }))];
+                const updatedUploads = [...savedUploads, ...newUploads];
                 setItem('uploadedFiles', updatedUploads);
                 
                 this.renderSongList();
@@ -1282,7 +1380,7 @@
                 event.target.value = '';
                 
                 if (newUploads.length > 0) {
-                    alert(`${newUploads.length} file(s) uploaded successfully! Note: For full persistence, you'll need to re-upload files after browser restart, or the app needs additional backend support.`);
+                    this.showError(`${newUploads.length} file(s) uploaded successfully!`);
                 }
             }
         }
@@ -1318,15 +1416,15 @@
                     const diameter = Math.max(button.clientWidth, button.clientHeight);
                     const radius = diameter / 2;
                     
-                    ripple.style.width = ripple.style.height = \`\${diameter}px\`;
-                    ripple.style.left = \`\${e.clientX - (button.getBoundingClientRect().left + radius)}px\`;
-                    ripple.style.top = \`\${e.clientY - (button.getBoundingClientRect().top + radius)}px\`;
+                    ripple.style.width = ripple.style.height = `${diameter}px`;
+                    ripple.style.left = `${e.clientX - (button.getBoundingClientRect().left + radius)}px`;
+                    ripple.style.top = `${e.clientY - (button.getBoundingClientRect().top + radius)}px`;
                     ripple.classList.add('ripple-effect');
                     
                     if (!document.getElementById('ripple-styles')) {
                         const styleEl = document.createElement('style');
                         styleEl.id = 'ripple-styles';
-                        styleEl.textContent = \`
+                        styleEl.textContent = `
                             .ripple-effect {
                                 position: absolute;
                                 border-radius: 50%;
@@ -1342,7 +1440,7 @@
                                     opacity: 0;
                                 }
                             }
-                        \`;
+                        `;
                         document.head.appendChild(styleEl);
                     }
                     
